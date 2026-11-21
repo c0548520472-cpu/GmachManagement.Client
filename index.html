@@ -83,7 +83,8 @@
                 </div>
                 <div id="gmachList" class="items-grid"></div>
             </section>
-            <div id="legacyCatalog" hidden>
+            <section id="itemCatalog" class="auth-card wide-card">
+            <h2>קטלוג פריטים</h2>
             <div class="toolbar">
                 <input id="searchInput" type="search"
                        placeholder="חיפוש פריט...">
@@ -116,7 +117,7 @@
             </div>
 
 
-            </div>
+            </section>
         </section>
 
         <section id="gmachPage" class="auth-card wide-card" hidden>
@@ -207,6 +208,8 @@
                 <label for="ownerBorrowPhone">טלפון</label><input id="ownerBorrowPhone" type="tel" maxlength="30">
                 <label for="ownerBorrowEmail">אימייל</label><input id="ownerBorrowEmail" type="email" maxlength="254">
                 <p class="muted">חובה למלא לפחות אחד: טלפון או אימייל.</p>
+                <label for="ownerBorrowDueDate">מועד החזרה (אופציונלי)</label>
+                <input id="ownerBorrowDueDate" type="date">
                 <p id="ownerBorrowMessage" class="message" role="status"></p>
                 <div class="dialog-actions"><button id="cancelOwnerBorrow" type="button" class="secondary">ביטול</button><button class="primary" type="submit">שמירת השאלה</button></div>
             </form>

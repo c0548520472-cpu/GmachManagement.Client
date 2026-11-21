@@ -750,13 +750,6 @@ function openOwnerBorrow(item){
  ownerBorrowDialog.showModal();
 }
 document.getElementById("cancelOwnerBorrow").addEventListener("click",()=>ownerBorrowDialog.close());
-const ownerBorrowDateLabel=document.createElement("label");
-ownerBorrowDateLabel.textContent="מועד החזרה (אופציונלי): ";
-const ownerBorrowDueDate=document.createElement("input");
-ownerBorrowDueDate.type="date";
-ownerBorrowDueDate.id="ownerBorrowDueDate";
-ownerBorrowDateLabel.append(ownerBorrowDueDate);
-document.getElementById("ownerBorrowForm").insertBefore(ownerBorrowDateLabel,document.getElementById("ownerBorrowForm").querySelector('button[type="submit"]'));
 document.getElementById("ownerBorrowForm").addEventListener("submit",async event=>{
  event.preventDefault();
  const borrowerName=document.getElementById("ownerBorrowName").value.trim();
@@ -995,7 +988,10 @@ function showPage(page, push = true) {
         else url.searchParams.set("page", page);
         history.pushState({page}, "", url);
     }
-    if (page === "home") { findGmachs(); }
+    if (page === "home") {
+        void findGmachs();
+        void loadItems();
+    }
     if (page === "gmach") { const id=Number(new URLSearchParams(location.search).get("gmach")); if(Number.isInteger(id)&&id>0)renderGmach(id);else showPage("home",true); }
     if (page === "account") { loadMyLoans(); loadPersonalTransactions(); }
     if (page === "owner") refreshAdmin();

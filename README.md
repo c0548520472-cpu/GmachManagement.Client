@@ -7,7 +7,7 @@
 ## הפעלה מקומית
 
 1. הפעילו תחילה את שרת ה־ASP.NET Core לפי הוראות ה־README בענף `submission` במאגר השרת. ודאו ש־Swagger נגיש ב־`https://localhost:7042/swagger`.
-2. שכפלו את מאגר הלקוח ופתחו מסוף בתיקייה המכילה את `index.html`.
+2. שכפלו את ענף ההגשה עם `git clone --branch submission https://github.com/c0548520472-cpu/GmachManagement.Client.git`. פתחו מסוף בתיקייה המכילה את `index.html`.
 3. הריצו `python -m http.server 5500 --bind 127.0.0.1` (או שרת סטטי מקומי אחר בפורט 5500).
 4. פתחו `http://127.0.0.1:5500` בדפדפן. הקובץ `app.js` בוחר אוטומטית את `https://localhost:7042/api` כשנכנסים מ־localhost או 127.0.0.1.
 5. אם שרת ה־API פועל בפורט אחר, עדכנו את `API_BASE` בראש `app.js` כך שיצביע לכתובת המקומית המתאימה. אם הדפדפן אינו סומך על תעודת HTTPS לפיתוח, אשרו אותה דרך דף Swagger המקומי.
