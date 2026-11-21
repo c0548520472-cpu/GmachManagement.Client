@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>ניהול הגמ"ח</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="brand-title"><img class="brand-logo" src="logo.svg" alt="" width="54" height="54"> ניהול הגמ״ח <small>נותנים מכל הלב</small></h1>
+            <nav class="site-nav" aria-label="ניווט ראשי"><button id="homeNav" class="secondary" type="button">דף הבית</button><button id="loginNav" class="secondary" type="button">הרשמה / התחברות</button><button id="myLoansNav" class="secondary" type="button" hidden>ההשאלות שלי</button><button id="adminNav" class="secondary" type="button" hidden>ניהול גמ״ח</button><button id="siteAdminNav" class="secondary" type="button" hidden>ניהול האתר</button></nav><div id="userArea"><button id="profileNav" class="secondary" type="button" hidden>הפרטים שלי</button>
+                <span id="welcomeText"></span>
+                <button id="logoutBtn" class="secondary" hidden>
+                    התנתקות
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section id="authSection" class="auth-card">
+            <h2>ברוכים הבאים</h2>
+            <p class="muted">התחברו כדי לנהל השאלות ופריטים</p>
+
+            <div class="tabs">
+                <button id="loginTab" class="tab active">
+                    התחברות
+                </button>
+                <button id="registerTab" class="tab">
+                    הרשמה
+                </button>
+            </div>
+
+            <form id="authForm">
+                <div id="nameGroup" hidden>
+                    <label for="fullName">שם מלא</label>
+                    <input id="fullName" type="text">
+                </div>
+
+                <div id="ownerRegistration" hidden><label><input id="registerOwner" type="checkbox"> אני בעל גמ״ח</label><div id="ownerFields" hidden><label for="gmachName">שם הגמ״ח</label><input id="gmachName" maxlength="150"><label for="gmachCity">עיר</label><input id="gmachCity" maxlength="100"></div></div>
+                <label for="email">כתובת אימייל</label>
+                <input id="email" type="email" required>
+
+                <label for="password">סיסמה</label>
+                <div class="password-field"><input id="password" type="password" required autocomplete="current-password"><label class="password-toggle"><input id="showPassword" type="checkbox"> הצג סיסמה</label></div>
+
+                <button type="submit" class="primary full-width"
+                        id="authSubmit">
+                    התחברות
+                </button>
+            </form>
+
+            <button id="forgotPasswordBtn" type="button" class="secondary">שכחתי סיסמה</button>
+            <p id="forgotPasswordNotice" class="message" hidden>איפוס סיסמה ללא התחברות אינו זמין כרגע. שינוי סיסמה אפשרי מתוך ״הפרטים שלי״ לאחר התחברות.</p>
+            <button id="requestReRegistration" type="button" class="secondary" hidden>שליחת בקשה לאישור הרשמה מחדש</button>
+            <p id="authMessage" class="message"
+               role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="dashboardSection" hidden>
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">קהילה של נתינה</span><h2>מוצאים את מה שצריך, קרוב לבית</h2>
+                    <p class="muted">
+                        מגלים גמ״חים בסביבה, מוצאים פריטים זמינים ומתחברים לעזרה הדדית
+                    </p>
+                </div>
+            </div>
+
+            <section class="auth-card wide-card" id="gmachDirectory">
+                <h2>איזה גמ״ח מחפשים היום?</h2><p class="muted directory-subtitle">אפשר לחפש לפי עיר, שם הגמ״ח או פריט מבוקש</p>
+                <div class="home-filters">
+                    <input id="citySearch" type="search" placeholder="עיר" aria-label="סינון לפי עיר">
+                    <input id="gmachSearch" type="search" placeholder="שם גמ״ח" aria-label="סינון לפי שם גמ״ח">
+                    <input id="homeItemSearch" type="search" placeholder="שם פריט" aria-label="סינון לפי שם פריט">
+                    <button id="findGmachs" type="button" class="primary">חיפוש</button>
+                </div>
+                <div id="gmachList" class="items-grid"></div>
+            </section>
+            <div id="legacyCatalog" hidden>
+            <div class="toolbar">
+                <input id="searchInput" type="search"
+                       placeholder="חיפוש פריט...">
+
+                <label for="categoryFilter">סוג גמ״ח</label><select id="categoryFilter"><option value="">כל הסוגים</option></select>
+                <label class="checkbox-label">
+                    <input id="availableOnly"
+                           type="checkbox">
+                    זמינים בלבד
+                </label>
+
+                <button id="searchBtn" class="primary">
+                    חיפוש
+                </button>
+            </div>
+
+            <p id="itemsMessage" class="message"
+               role="status" aria-live="polite"></p>
+
+            <div id="itemsGrid" class="items-grid"></div>
+
+            <div class="pagination">
+                <button id="prevPage" class="secondary">
+                    הקודם
+                </button>
+                <span id="pageLabel">עמוד 1</span>
+                <button id="nextPage" class="secondary">
+                    הבא
+                </button>
+            </div>
+
+
+            </div>
+        </section>
+
+        <section id="gmachPage" class="auth-card wide-card" hidden>
+            <button id="backToGmachs" class="secondary" type="button">חזרה לרשימת הגמ״חים</button>
+            <div id="gmachDetails"></div>
+        </section>
+
+        <section id="profilePage" class="auth-card wide-card" hidden>
+            <h2>עריכת הפרטים האישיים שלי</h2>
+            <form id="profileForm">
+                <label for="profileName">שם מלא</label><input id="profileName" maxlength="150" required>
+                <label for="profileEmail">כתובת מייל</label><input id="profileEmail" type="email" required>
+                <label><input id="profileIsOwner" type="checkbox"> אני בעל/ת גמ״ח</label>
+                <div id="profileGmachFields" hidden>
+                    <label for="profileGmachName">שם הגמ״ח</label><input id="profileGmachName" maxlength="150">
+                    <label for="profileGmachType">סוג הגמ״ח</label><input id="profileGmachType" maxlength="100" placeholder="למשל כלי עבודה">
+                    <label for="profileCity">עיר</label><input id="profileCity" maxlength="100">
+                </div>
+                <label for="profileNewPassword">סיסמה חדשה (להשאיר ריק אם לא משנים)</label><input id="profileNewPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password">
+                <label for="profileCurrentPassword">סיסמה נוכחית לאישור השינויים (חובה)</label><input id="profileCurrentPassword" type="password" required autocomplete="current-password">
+                <label><input id="profileShowPasswords" type="checkbox"> הצגת סיסמאות</label>
+                <button class="primary" type="submit">שמירת השינויים</button>
+            </form>
+            <p id="profileMessage" class="message" role="status"></p>
+        </section>
+
+        <section id="accountPage" class="account-page" hidden>
+            <div class="page-heading"><h2>האזור האישי שלי</h2><p class="muted">ניהול השאלות ופעולות אישיות</p></div>
+            <section id="openLoansSection" class="auth-card wide-card"><h2>ההשאלות הפתוחות שלי</h2><label for="personalItemSearch">חיפוש השאלות לפי שם או תיאור פריט</label><input id="personalItemSearch" type="search" placeholder="הקלידי שם או תיאור פריט..." autocomplete="off"><p class="muted">השאלות שעדיין ממתינות להחזרה</p><div id="openPersonalList" class="items-grid"></div><p id="openPersonalMessage" class="message" role="status"></p><h3>השאלות פתוחות מהגמ״ח</h3><p id="myLoansMessage" class="message" role="status"></p><div id="myLoansList" class="items-grid"></div></section>
+            <section id="personalSection" class="auth-card wide-card" style="margin-top:24px">
+                <h2>השאלה חדשה</h2>
+                <p class="muted">מעקב אחר פריטים ששאלתי או השאלתי באופן פרטי</p>
+                <form id="personalForm">
+                    <label for="personalParty">שם האדם</label>
+                    <input id="personalParty" type="text" maxlength="150" required>
+                    <label for="personalItem">תיאור הפריט</label>
+                    <input id="personalItem" type="text" maxlength="500" required>
+                    <label for="personalType">סוג פעולה</label>
+                    <select id="personalType">
+                        <option value="1">שאלתי ממישהו</option>
+                        <option value="2">השאלתי למישהו</option>
+                    </select>
+                    <label for="personalAmount">סכום (אם מדובר בהלוואת כסף)</label>
+                    <input id="personalAmount" type="number" min="0.01" step="0.01">
+                    <label for="personalDate">תאריך ההשאלה</label>
+                    <input id="personalDate" type="date" required>
+                    <label for="personalReminder">תאריך תזכורת (אופציונלי)</label>
+                    <input id="personalReminder" type="date">
+                    <button class="primary" type="submit">שמירת השאלה אישית</button>
+                </form>
+                <p id="personalMessage" class="message" role="status" aria-live="polite"></p>
+            </section>
+            <section id="personalHistorySection" class="auth-card wide-card" style="margin-top:24px">
+                <h2>היסטוריית ההשאלות</h2>
+                <div id="personalList" class="items-grid"></div>
+            </section>
+        </section>
+        <section id="ownerPage" class="account-page" hidden>
+            <div class="page-heading"><h2>אזור בעל הגמ״ח</h2><p class="muted">ניהול פריטים, השאלות וייבוא Excel</p></div>
+            <section id="adminSection" class="auth-card wide-card" hidden style="margin-top:24px">
+                <h2>ניהול גמ"ח</h2>
+                <div id="ownerGmachInfo"></div><form id="claimGmachForm" hidden><h3>שיוך גמ״ח לחשבון קיים</h3><label for="claimGmachName">שם הגמ״ח</label><input id="claimGmachName" maxlength="150" required><label for="claimGmachCity">עיר</label><input id="claimGmachCity" maxlength="100" required><button type="submit" class="primary">יצירת הגמ״ח שלי</button></form><div id="ownerManagement" hidden><form id="excelImportForm" enctype="multipart/form-data"><label for="excelFile">ייבוא פריטים מ־Excel (עמודה A: שם פריט, עמודה B: תיאור, עמודה C: כמות הפריט בגמ״ח)</label><input id="excelFile" type="file" accept=".xlsx" required><button class="primary" type="submit">ייבוא Excel</button></form>
+                <form id="adminItemForm">
+                    <label for="adminItemName">שם פריט</label><input id="adminItemName" required maxlength="150">
+                    <label for="adminItemDescription">תיאור</label><input id="adminItemDescription">
+                    <button class="primary" type="submit">הוספת פריט</button>
+                </form>
+                </div><p id="adminMessage" class="message" role="status"></p>
+                <h3>פריטים פעילים</h3>
+                <label for="adminItemSearch">חיפוש פריטים לפי שם או תיאור</label><input id="adminItemSearch" type="search" placeholder="הקלידי שם או תיאור פריט..." autocomplete="off">
+                <div id="bulkItemActions" class="auth-card" hidden><span id="selectedItemsCount"></span> <button id="bulkEditItems" type="button">עריכת פריטים נבחרים</button> <button id="bulkAddCopies" type="button">הוספת עותקים לנבחרים</button> <button id="bulkRemoveItems" type="button">הסרת פריטים נבחרים</button></div>
+                <div id="adminItems"></div>
+                <details id="removedItemsDetails"><summary>פריטים שהוסרו — לשחזור</summary><div id="removedAdminItems"></div></details>
+                <h3>בקשות השאלה ממתינות</h3><p id="borrowRequestsMessage" class="message" role="status"></p><div id="borrowRequestsList" class="items-grid"></div>
+                <h3>השאלות פעילות</h3>
+                <label for="managedLoansSort">מיון לפי מועד ההשאלה</label>
+                <select id="managedLoansSort"><option value="newest">מהחדש ביותר לישן ביותר</option><option value="oldest">מהישן ביותר לחדש ביותר</option></select>
+                <div id="managedLoans"></div>
+                <div id="adminLoans"></div>
+            </section>
+        </section>
+
+        <dialog id="ownerBorrowDialog">
+            <form id="ownerBorrowForm">
+                <h2>סימון פריט כהושאל</h2>
+                <p id="ownerBorrowItemName"></p>
+                <label for="ownerBorrowName">שם השואל (חובה)</label><input id="ownerBorrowName" maxlength="150" required>
+                <label for="ownerBorrowPhone">טלפון</label><input id="ownerBorrowPhone" type="tel" maxlength="30">
+                <label for="ownerBorrowEmail">אימייל</label><input id="ownerBorrowEmail" type="email" maxlength="254">
+                <p class="muted">חובה למלא לפחות אחד: טלפון או אימייל.</p>
+                <p id="ownerBorrowMessage" class="message" role="status"></p>
+                <div class="dialog-actions"><button id="cancelOwnerBorrow" type="button" class="secondary">ביטול</button><button class="primary" type="submit">שמירת השאלה</button></div>
+            </form>
+        </dialog>
+        <dialog id="borrowDialog">
+            <form id="borrowForm">
+                <h2>השאלת פריט</h2>
+                <p id="borrowItemName"></p>
+
+                <label for="requestName">שם מלא</label><input id="requestName" maxlength="150" required>
+                <label for="requestPhone">טלפון</label><input id="requestPhone" type="tel" maxlength="30">
+                <label for="requestEmail">אימייל</label><input id="requestEmail" type="email" maxlength="254">
+                <p class="muted">יש להזין טלפון או אימייל.</p>
+
+                <p id="borrowMessage" class="message"
+                   role="status" aria-live="polite"></p>
+
+                <div class="dialog-actions">
+                    <button type="button" id="cancelBorrow"
+                            class="secondary">
+                        ביטול
+                    </button>
+                    <button type="submit" class="primary">
+                        שליחת בקשה
+                    </button>
+                </div>
+            </form>
+        </dialog>
+
+        <section id="siteAdminPage" hidden>
+            <div class="page-heading"><h2>ניהול האתר</h2><p class="muted">למנהלי האתר בלבד</p></div>
+            <section class="auth-card wide-card">
+                <h3>ניהול הרשאות מנהלים</h3>
+                <p class="muted">כדי להוסיף מנהל, כתובת האימייל צריכה להיות רשומה באתר. ניתן לערוך כתובות של חשבונות קיימים.</p>
+                <form id="siteAdminGrantForm" class="toolbar">
+                    <label for="siteAdminEmail">כתובת אימייל של מנהל חדש</label>
+                    <input id="siteAdminEmail" type="email" required maxlength="254">
+                    <button class="primary" type="submit">הוספת מנהל אתר</button>
+                </form>
+                <p id="siteAdminMessage" class="message" role="status"></p>
+                <h3>בקשות הרשמה מחדש של משתמשים שהוסרו</h3><p class="muted">התראות אימייל יופעלו לאחר הגדרת שירות הדואר.</p><div id="siteAdminReRegistrations" class="items-grid"></div><h3>כל המשתמשים הרשומים</h3>
+<label for="siteAdminUserSearch">חיפוש משתמש לפי שם או אימייל</label>
+<input id="siteAdminUserSearch" type="search" placeholder="חיפוש משתמש..." autocomplete="off">
+<p id="siteAdminUserCount" class="muted" aria-live="polite"></p>
+<div class="site-admin-bulk-toolbar"><label><input id="siteAdminSelectAll" type="checkbox"> בחירת כל המשתמשים המוצגים</label><span id="siteAdminSelectedCount" aria-live="polite">0 משתמשים נבחרו</span><button id="siteAdminBulkDelete" class="secondary" type="button" disabled>מחיקת נבחרים</button></div><div id="siteAdminUsers" class="site-admin-user-list"></div>
+                <h3>גמ״חים</h3><div id="siteAdminGmachs" class="items-grid"></div>
+                <h3>פריטים</h3><div id="siteAdminItems" class="items-grid"></div>
+            </section>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
