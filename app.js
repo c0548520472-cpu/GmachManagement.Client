@@ -678,7 +678,7 @@ async function loadPersonalTransactions() {
                 button.addEventListener("click", async () => {
                     button.disabled = true;
                     try {
-                        await apiRequest(`/personal-transactions/${entry.id}/complete`, { method: "POST" });
+                        await apiRequest(`/personal-transactions/${entry.id}/completions/current`, { method: "PUT" });
                         await loadPersonalTransactions();
                     } catch (error) {
                         showMessage(openMessage, error.message, "error");
@@ -761,7 +761,7 @@ document.getElementById("ownerBorrowForm").addEventListener("submit",async event
  if(!borrowerName){showMessage(message,"חובה למלא שם שואל.","error");return;}
  if(!borrowerPhone&&!borrowerEmail){showMessage(message,"חובה למלא לפחות טלפון או אימייל.","error");return;}
  try{
-  await apiRequest("/gmachs/mine/items/"+ownerBorrowItemId+"/borrow",{method:"POST",body:JSON.stringify({borrowerName,borrowerPhone:borrowerPhone||null,borrowerEmail:borrowerEmail||null,expectedReturnDate:dueDate})});
+  await apiRequest("/gmachs/mine/items/"+ownerBorrowItemId+"/loans",{method:"POST",body:JSON.stringify({borrowerName,borrowerPhone:borrowerPhone||null,borrowerEmail:borrowerEmail||null,expectedReturnDate:dueDate})});
   ownerBorrowDialog.close();await refreshAdmin();await loadItems();
  }catch(error){showMessage(message,error.message,"error");}
 });
@@ -898,7 +898,7 @@ async function refreshAdmin() {
           const borrowedDate=document.createElement("p");
           borrowedDate.textContent="הושאל בתאריך: "+new Date(record.borrowedAt).toLocaleString("he-IL",{dateStyle:"short",timeStyle:"short"});
           const returned=document.createElement("button");returned.textContent="הוחזר";
-          returned.onclick=async()=>{try{await apiRequest("/gmachs/mine/managed-loans/"+record.id+"/return",{method:"POST"});await refreshAdmin();await loadItems();}catch(e){showMessage(message,e.message,"error");}};
+          returned.onclick=async()=>{try{await apiRequest("/gmachs/mine/managed-loans/"+record.id+"/returns/current",{method:"PUT"});await refreshAdmin();await loadItems();}catch(e){showMessage(message,e.message,"error");}};
           const dueLabel=document.createElement("label");dueLabel.textContent="מועד החזרה: ";
           const dueInput=document.createElement("input");dueInput.type="date";
           dueInput.value=record.expectedReturnDate ? record.expectedReturnDate.slice(0,10) : "";
@@ -917,7 +917,7 @@ async function refreshAdmin() {
             const returned = document.createElement("button");
             returned.textContent = "הוחזר";
             returned.onclick = async () => {
-                try {await apiRequest("/Loans/"+loan.id+"/admin-return",{method:"POST"});await refreshAdmin();await loadItems();}
+                try {await apiRequest("/Loans/managed/"+loan.id+"/returns/current",{method:"PUT"});await refreshAdmin();await loadItems();}
                 catch(e){showMessage(message,e.message,"error");}
             };
             const due = document.createElement("button");
@@ -1187,7 +1187,7 @@ async function loadBorrowRequests() {
    const button=document.createElement("button");button.className="primary";button.textContent="סימון כהושאל";
    button.addEventListener("click",async()=>{
     button.disabled=true;
-    try{await apiRequest("/borrow-requests/mine/"+request.id+"/fulfill",{method:"POST"});await refreshAdmin();}
+    try{await apiRequest("/borrow-requests/mine/"+request.id+"/approvals/current",{method:"PUT"});await refreshAdmin();}
     catch(e){showMessage(message,e.message,"error");button.disabled=false;}
    });
    card.append(heading,contact,button);list.append(card);
