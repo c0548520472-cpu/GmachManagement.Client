@@ -28,7 +28,7 @@ async function refreshWelcomeName() {
     if (!activeToken || profileNameToken === activeToken) return;
     profileNameToken = activeToken;
     try {
-        const profile = await apiRequest("/Auth/profile");
+        const profile = await apiRequest("/Auth/profiles/current");
         if (token !== activeToken) return;
         signedInName = String(profile.name || "").trim().slice(0, 60);
         renderWelcomeName();
@@ -174,7 +174,7 @@ document.getElementById("forgotPasswordBtn").addEventListener("click", async () 
     button.disabled = true;
     showMessage(authMessage, "שולח קישור לאיפוס סיסמה...");
     try {
-        const result = await apiRequest("/Auth/forgot-password", {
+        const result = await apiRequest("/Auth/password-recovery-requests", {
             method: "POST", body: JSON.stringify({ email })
         });
         showMessage(authMessage, result.message, "success");
@@ -222,7 +222,7 @@ function showResetPasswordForm() {
         submit.disabled = true;
         status.textContent = "מעדכן סיסמה...";
         try {
-            const result = await apiRequest("/Auth/reset-password", {
+            const result = await apiRequest("/Auth/password-resets", {
                 method: "POST",
                 body: JSON.stringify({ email: resetEmail, token: resetToken, newPassword: password.value })
             });
@@ -271,7 +271,7 @@ authForm.addEventListener("submit", async (event) => {
         showMessage(authMessage, "מבצע הרשמה...");
 
         try {
-            const registration = await apiRequest("/Auth/register", {
+            const registration = await apiRequest("/Auth/accounts", {
                 method: "POST",
                 body: JSON.stringify({ name, email, password, isGmachOwner: document.getElementById("registerOwner").checked, gmachName: document.getElementById("gmachName").value.trim(), city: normalizeCity(document.getElementById("gmachCity").value.trim()) })
             });
@@ -299,7 +299,7 @@ authForm.addEventListener("submit", async (event) => {
     showMessage(authMessage, "מתחבר...");
 
     try {
-        const result = await apiRequest("/Auth/login", {
+        const result = await apiRequest("/Auth/sessions", {
             method: "POST",
             body: JSON.stringify({ email, password })
         });
@@ -322,7 +322,7 @@ authForm.addEventListener("submit", async (event) => {
 
 document.getElementById("requestReRegistration").addEventListener("click",async()=>{
     try { const email=document.getElementById("email").value.trim();if(!email)throw new Error("יש להזין כתובת אימייל.");
-        const result=await apiRequest("/Auth/request-re-registration",{method:"POST",body:JSON.stringify({email})});
+        const result=await apiRequest("/Auth/re-registration-requests",{method:"POST",body:JSON.stringify({email})});
         showMessage(authMessage,result.message,"success");document.getElementById("requestReRegistration").hidden=true;
     }catch(error){showMessage(authMessage,error.message,"error");}
 });
@@ -795,7 +795,7 @@ function askCopyQuantity() {
 async function addAdminCopies(items) {
     const quantity=askCopyQuantity();if(quantity===null)return;
     try {
-        for(const item of items) await apiRequest("/items/"+item.id+"/copies/batch?quantity="+quantity,{method:"POST"});
+        for(const item of items) await apiRequest("/items/"+item.id+"/copy-batches?quantity="+quantity,{method:"POST"});
         await refreshAdmin();await loadItems();
         showMessage(document.getElementById("adminMessage"),"העותקים נוספו בהצלחה.","success");
     }catch(e){showMessage(document.getElementById("adminMessage"),e.message,"error");}
@@ -1004,7 +1004,7 @@ function showHome() { showPage("home"); }
 async function loadProfile(){
  const msg=document.getElementById("profileMessage");showMessage(msg,"");
  try{
-  const p=await apiRequest("/Auth/profile");
+  const p=await apiRequest("/Auth/profiles/current");
   document.getElementById("profileName").value=p.name||"";
   document.getElementById("profileEmail").value=p.email||"";
   document.getElementById("profileIsOwner").checked=!!p.isGmachOwner;
@@ -1032,7 +1032,7 @@ document.getElementById("profileForm").addEventListener("submit",async e=>{
  currentPassword:document.getElementById("profileCurrentPassword").value,
  newPassword:document.getElementById("profileNewPassword").value||null};
  try{
-  const result=await apiRequest("/Auth/profile",{method:"PUT",body:JSON.stringify(payload)});
+  const result=await apiRequest("/Auth/profiles/current",{method:"PUT",body:JSON.stringify(payload)});
   if(!result.accessToken)throw new Error("נדרש להתחבר מחדש.");
   token=result.accessToken;sessionStorage.setItem("gmachToken",token);
   signedInName = String(payload.name || "").trim().slice(0, 60);
@@ -1149,7 +1149,7 @@ showPage(["login","account","owner","profile","gmach"].includes(initialPage)?ini
 document.getElementById("excelImportForm").addEventListener("submit",async event=>{
  event.preventDefault();const file=document.getElementById("excelFile").files[0];if(!file)return;
  const form=new FormData();form.append("file",file);
- try{const response=await fetch(API_BASE+"/gmachs/mine/import",{method:"POST",headers:{Authorization:"Bearer "+token},body:form});
+ try{const response=await fetch(API_BASE+"/gmachs/mine/imports",{method:"POST",headers:{Authorization:"Bearer "+token},body:form});
  const result=await response.json();if(!response.ok)throw new Error(result.message||"ייבוא נכשל");
  showMessage(document.getElementById("adminMessage"),"יובאו "+result.imported+" פריטים בהצלחה","success");await refreshAdmin();await loadItems();await findGmachs();
  }catch(e){showMessage(document.getElementById("adminMessage"),e.message,"error");}
@@ -1237,7 +1237,7 @@ async function loadSiteAdmin(keepMessage=false) {
         for(const req of requests){const card=document.createElement("article");card.className="item-card";
             const email=document.createElement("strong");email.textContent=req.email;card.append(email);
             card.append(adminActionButton("אישור הרשמה מחדש",async()=>{
-                if(confirm("לאשר הרשמה מחדש לכתובת "+req.email+"?"))await adminPerform("/site-admin/re-registration-requests/approve",{method:"POST",body:JSON.stringify({email:req.email})},"הבקשה אושרה. המשתמש יכול להירשם מחדש.");
+                if(confirm("לאשר הרשמה מחדש לכתובת "+req.email+"?"))await adminPerform("/site-admin/re-registration-requests/approvals",{method:"POST",body:JSON.stringify({email:req.email})},"הבקשה אושרה. המשתמש יכול להירשם מחדש.");
             }));requestsList.append(card);
         }
         for(const u of users) {
